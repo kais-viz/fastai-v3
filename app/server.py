@@ -9,10 +9,11 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 
-export_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
+export_file_url = 'https://drive.google.com/uc?id=1mhsXSg9e6_pRfyDaig2PV_SciwWKlLf7&export=download'
 export_file_name = 'export.pkl'
 
-classes = ['black', 'grizzly', 'teddys']
+classes = ['black', 'blue', 'brown', 'dress', 'green', 'hoodie', 'pants', 
+		'pink', 'red', 'shirt', 'shoes', 'shorts', 'silver', 'skirt', 'suit', 'white', 'yellow']
 path = Path(__file__).parent
 
 app = Starlette()
@@ -60,9 +61,22 @@ async def analyze(request):
     img_data = await request.form()
     img_bytes = await (img_data['file'].read())
     img = open_image(BytesIO(img_bytes))
-    prediction = learn.predict(img)[0]
+    # prediction = learn.predict(img)[0]
+    _, _, pred_pct = learn.predict(img)
+    prediction = get_preds(pred_pct, classes)
     return JSONResponse({'result': str(prediction)})
 
+def get_preds(obj, classes):
+    predictions = {}
+    x=0
+    for item in obj:
+        acc= round(item.item(), 3)*100
+        if acc > 15:
+            predictions[classes[x]] = acc
+        x+=1
+    predictions ={k: v for k, v in sorted(predictions.items(), key=lambda item: item[1], reverse=True)}
+
+    return predictions
 
 if __name__ == '__main__':
     if 'serve' in sys.argv:
