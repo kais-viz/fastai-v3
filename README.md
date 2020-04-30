@@ -26,9 +26,6 @@ docker build -t fastai-v3 . && docker run --rm -it -p 5000:5000 fastai-v3
 
 Go to [http://localhost:5000/](http://localhost:5000/) to test your app.
 
-## Set up AWS EC2 Instance
-
-
 ## Deploying the Model on AWS
 
 To deploy the trained model, I used lankinen's approach and followed his tutorial in his [medium article](https://medium.com/@lankinen/fastai-model-to-production-this-is-how-you-make-web-app-that-use-your-model-57d8999450cf).
