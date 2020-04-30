@@ -1,6 +1,7 @@
 import aiohttp
 import asyncio
 import uvicorn
+import requests
 from fastai import *
 from fastai.vision import *
 from io import BytesIO
@@ -12,8 +13,8 @@ from starlette.staticfiles import StaticFiles
 export_file_url = 'https://drive.google.com/uc?id=1mhsXSg9e6_pRfyDaig2PV_SciwWKlLf7&export=download'
 export_file_name = 'export.pkl'
 
-classes = ['black', 'blue', 'brown', 'dress', 'green', 'hoodie', 'pants', 
-		'pink', 'red', 'shirt', 'shoes', 'shorts', 'silver', 'skirt', 'suit', 'white', 'yellow']
+classes = ['black', 'blue', 'brown', 'dress', 'green', 'hoodie', 'pants', 'pink', 'red', 
+		'shirt', 'shoes', 'shorts', 'silver', 'skirt', 'suit', 'white', 'yellow']
 path = Path(__file__).parent
 
 app = Starlette()
@@ -61,8 +62,19 @@ async def analyze(request):
     img_data = await request.form()
     img_bytes = await (img_data['file'].read())
     img = open_image(BytesIO(img_bytes))
-    # prediction = learn.predict(img)[0]
+
     _, _, pred_pct = learn.predict(img)
+    prediction = get_preds(pred_pct, classes)
+    return JSONResponse({'result': str(prediction)})
+
+@app.route('/url_analyze', methods=['POST'])
+async def url_analyze(url):
+    # url = "https://live.staticflickr.com/8188/28638701352_1aa058d0c6_b.jpg" 
+    response = await requests.get(url).content #get request contents
+
+    img = await open_image(BytesIO(response)) #convert to image
+
+    _, _, pred_pct = learn.predict(img) #predict while ignoring first 2 array inputs
     prediction = get_preds(pred_pct, classes)
     return JSONResponse({'result': str(prediction)})
 
