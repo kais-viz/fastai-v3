@@ -67,16 +67,16 @@ async def analyze(request):
     prediction = get_preds(pred_pct, classes)
     return JSONResponse({'result': str(prediction)})
 
-@app.route('/url_analyze', methods=['POST'])
-async def url_analyze(url):
-    # url = "https://live.staticflickr.com/8188/28638701352_1aa058d0c6_b.jpg" 
-    response = await requests.get(url).content #get request contents
+# @app.route('/url_analyze', methods=['POST'])
+# async def url_analyze(url):
+#     # url = "https://live.staticflickr.com/8188/28638701352_1aa058d0c6_b.jpg" 
+#     response = await requests.get(url).content #get request contents
 
-    img = await open_image(BytesIO(response)) #convert to image
+#     img = await open_image(BytesIO(response)) #convert to image
 
-    _, _, pred_pct = learn.predict(img) #predict while ignoring first 2 array inputs
-    prediction = get_preds(pred_pct, classes)
-    return JSONResponse({'result': str(prediction)})
+#     _, _, pred_pct = learn.predict(img) #predict while ignoring first 2 array inputs
+#     prediction = get_preds(pred_pct, classes)
+#     return JSONResponse({'result': str(prediction)})
 
 def get_preds(obj, classes):
     predictions = {}
