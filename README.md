@@ -3,7 +3,7 @@
 
 This repo can be used as a starting point to deploy [fast.ai](https://github.com/fastai/fastai) models on AWS EC2 instances.
 
-My apparel app described here is up at `https://fastai-v3.onrender.com`. Test it out with clothing images!
+My apparel app described is up [here](http://3.86.89.194:5000/). Test it out with clothing images!
 
 
 ## Setting up the app and model files
